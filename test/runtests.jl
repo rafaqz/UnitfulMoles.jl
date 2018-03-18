@@ -16,7 +16,7 @@ end
     @test_throws ErrorException 2molFoo - 3molBar
 end
 
-@testset "Can jultiple or divide mol units" begin
+@testset "Can multiply or divide mol units" begin
     @test molFoo * 2molFoo == 2molFoo^2
     @test 1molFoo / 2molFoo == 1/2
     @test_nowarn molFoo * 2molBar
