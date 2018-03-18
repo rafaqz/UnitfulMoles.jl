@@ -22,3 +22,10 @@ end
     @test_nowarn molFoo * 2molBar
     @test_nowarn molFoo / 2molBar
 end
+
+@testset "Compound weight is the sum of its components" begin
+    @compound Foo Bar 2
+    @test uconvert(u"g", 1molFooBar2) == 255.3u"g"
+    @compound Foo 4 Bar
+    @test uconvert(u"g", 1molFoo4Bar) == 321.9u"g"
+end
