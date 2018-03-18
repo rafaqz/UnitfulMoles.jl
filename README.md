@@ -1,9 +1,9 @@
 # UnitfulMoles
 
-This package provides a standardised method for defining mol units with gram
-conversion using Unitful.jl. 
+This package provides a standardised method for defining mol units for the julia
+language, using Unitful.jl. 
 
-This package is basically just the @mol macro.
+It's basically just the @mol macro:
 
 ```
 julia> @mol C 12.011                                               
@@ -26,3 +26,6 @@ And allows units to be expressed as mol / mol:
 julia> 0.5molC/molN                                                
 0.5 mol(C) mol(N)^-1    
 ```
+
+A set of predefined mol units is maintained separately in
+[UnitfulConventionalMoles.jl](https://github.com/rafaqz/UnitfulConventionalMoles.jl).
