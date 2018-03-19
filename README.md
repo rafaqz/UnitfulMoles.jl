@@ -47,5 +47,17 @@ julia> uconvert(u"g", 10molNO3)
 ```
 
 
+You can also use theses macros in assignments:
+
+```
+julia> x = (100@compound C O 2) / 25u"L"
+4.0 L^-1 mol(CO2)
+
+julia> uconvert(u"g/L", x)
+176.3600000000001 g L^-1
+```
+
+(The @compound macro needs brackets, otherwise it will suck in the rest of the line)
+
 A set of predefined mol units is maintained separately in
 [UnitfulConventionalMoles.jl](https://github.com/rafaqz/UnitfulConventionalMoles.jl).
