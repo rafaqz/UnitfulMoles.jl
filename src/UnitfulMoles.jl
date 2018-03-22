@@ -5,27 +5,34 @@ using Unitful
 export @mol, @xmol, @compound, @u_str, @unit, uconvert, parse_compound, sum_base
 
 macro mol(x::Symbol, grams::Real)
+    symb = Symbol("mol", x)
+    abbr = "mol($x)"
+    name = "Moles $(x)"
+    equals = """ $(grams)u"g" """
+    tf = true
+
     expr = Expr(:block)
-    fixed = Symbol("mol", x)
-    free = Symbol("_", fixed)
-    push!(expr.args, parse("""@unit $free "mol($x)" "Moles $(x)" $(grams)u"g" false"""))
-    push!(expr.args, :($(fixed) = Unitful.FixedUnits($free)))
+    push!(expr.args, parse("""@unit $symb "$abbr" "$name" $equals $tf"""))
     esc(expr)
 end
 
 macro xmol(base::Symbol, compound::Symbol)
-    expr = Expr(:block)
-    fixed = Symbol(base, "mol", compound)
-    free = Symbol("_", fixed)
     elements = parse_compound(string(compound))
     n = 1/sum_base(base, elements)
+
+    symb = Symbol(base, "mol", compound)
+    abbr = "$(base)-mol($compound)"
+    name = "$base-moles $(compound)"
+    equals = "$(n)mol$(compound)"
+    tf = true
+
+    expr = Expr(:block)
     push!(expr.args, parse("""@compound $compound"""))
-    push!(expr.args, parse("""@unit $free "$(base)-mol($compound)" "$base-moles $(compound)" $(n)mol$(compound) false"""))
-    push!(expr.args, :($(fixed) = Unitful.FixedUnits($free)))
+    push!(expr.args, parse("""@unit $symb "$abbr" "$name" $equals $tf"""))
     esc(expr)
 end
 
-macro compound(name)
+macro compound(name::Symbol)
     elements = parse_compound(string(name))
     weight = 0.0u"g"
     for (el, n) in elements

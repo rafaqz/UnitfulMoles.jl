@@ -9,18 +9,17 @@ using Base.Test
     @test uconvert(u"g", 2molFoo) == 111.0u"g"
 end
 
-@testset "Can't add or subtract dfferent mol units" begin
+@testset "Can add or subtract mol units" begin
     @test 3molFoo + 2molFoo == 5molFoo
     @test 3molFoo - 2molFoo == 1molFoo
-    @test_throws ErrorException 2molFoo + 3molBar
-    @test_throws ErrorException 2molFoo - 3molBar
+    @test 2molFoo + 3molBar ==  0.4107u"kg"
+    @test 2molFoo - 3molBar == -0.18870000000000003u"kg"
 end
 
 @testset "Can multiply or divide mol units" begin
     @test molFoo * 2molFoo == 2molFoo^2
     @test 1molFoo / 2molFoo == 1/2
-    @test_nowarn molFoo * 2molBar
-    @test_nowarn molFoo / 2molBar
+    molFoo/molBar * 2molBar == 2molFoo
 end
 
 @testset "Compound weight is the sum of its components" begin
@@ -40,5 +39,10 @@ end
     @test parse_compound("CO2") == ["C" => 1, "O" => 2]
     @test parse_compound("NaCl") == ["Na" => 1, "Cl" => 1]
     @test parse_compound("C8H10N4O2") == ["C" => 8, "H" => 10, "N" => 4, "O" => 2]
+end
+
+@testset "xmols are the correct fraction of their compound" begin
+    @xmol Bar FooBar2
+    1molFooBar2 == 2BarmolFooBar2
 end
 
