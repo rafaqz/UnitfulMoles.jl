@@ -3,6 +3,8 @@
 This package provides a standardised method for defining mol units for the julia
 language, using Unitful.jl. 
 
+## Moles
+
 The main command is the @mol macro:
 
 ```
@@ -13,7 +15,7 @@ mol(C)
 It allows conversion between mol and g:
 
 ```
-julia> @mol N 14.0067
+jpickulia> @mol N 14.0067
 mol(N)                                                             
 
 julia> uconvert(u"g", 5molN)                                       
@@ -29,13 +31,18 @@ julia> 0.5molC/molN
 0.5 mol(C) mol(N)^-1    
 ```
 
+A set of predefined mol units is maintained separately in
+[UnitfulConventionalMoles.jl](https://github.com/rafaqz/UnitfulConventionalMoles.jl).
+
+## Compounds
+
 The @compound macro lets you combine basic elements into compound molecules:
 
 ```
 julia> @mol O 15.999
 mol(O)
 
-julia> @compound N O 3                                      
+julia> @compound NO3                                      
 mol(NO3)                                                    
 ```
 
@@ -47,17 +54,31 @@ julia> uconvert(u"g", 10molNO3)
 ```
 
 
-You can also use theses macros in assignments:
+You can also use these macros in assignments:
 
 ```
-julia> x = (100@compound C O 2) / 25u"L"
+julia> x = (100@compound CO2) / 25u"L"
 4.0 L^-1 mol(CO2)
 
 julia> uconvert(u"g/L", x)
 176.3600000000001 g L^-1
 ```
 
-(The @compound macro needs brackets, otherwise it will suck in the rest of the line)
+## C-mol and others
 
-A set of predefined mol units is maintained separately in
-[UnitfulConventionalMoles.jl](https://github.com/rafaqz/UnitfulConventionalMoles.jl).
+The @xmol macro creates fractional moles scaled to one mole of an element in a
+compound. The best example is the C-mole, which measure the amount of a compound
+relative to one mole of C:
+
+```
+@xmol C C8H10N4O2
+
+julia> uconvert(molC8H10N4O2, 1CmolC8H10N4O2)                             
+0.125 mol(C8H10N4O2)                                                      
+
+julia> uconvert(CmolC8H10N4O2, 1molC8H10N4O2)
+8.0 Cmol(C8H10N4O2)
+                                                                          
+julia> uconvert(u"g", 1CmolC8H10N4O2)                                     
+24.27425 g                                                                
+```

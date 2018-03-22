@@ -24,8 +24,21 @@ end
 end
 
 @testset "Compound weight is the sum of its components" begin
-    @compound Foo Bar 2
+    @compound FooBar2
     @test uconvert(u"g", 1molFooBar2) == 255.3u"g"
-    @compound Foo 4 Bar
+    @compound Foo4Bar
     @test uconvert(u"g", 1molFoo4Bar) == 321.9u"g"
 end
+
+@testset "Sum base" begin
+    elements = ["C" => 1, "A" => 1, "B" => 2, "C" => 2]
+    base = "C"
+    @test sum_base(base, elements) == 3
+end
+
+@testset "Parse compound" begin
+    @test parse_compound("CO2") == ["C" => 1, "O" => 2]
+    @test parse_compound("NaCl") == ["Na" => 1, "Cl" => 1]
+    @test parse_compound("C8H10N4O2") == ["C" => 8, "H" => 10, "N" => 4, "O" => 2]
+end
+
