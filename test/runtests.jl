@@ -32,13 +32,13 @@ end
 @testset "Sum base" begin
     elements = ["C" => 1, "A" => 1, "B" => 2, "C" => 2]
     base = "C"
-    @test sum_base(base, elements) == 3
+    @test UnitfulMoles.sum_base(base, elements) == 3
 end
 
 @testset "Parse compound" begin
-    @test parse_compound("CO2") == ["C" => 1, "O" => 2]
-    @test parse_compound("NaCl") == ["Na" => 1, "Cl" => 1]
-    @test parse_compound("C8H10N4O2") == ["C" => 8, "H" => 10, "N" => 4, "O" => 2]
+    @test UnitfulMoles.parse_compound("CO2") == ["C" => 1, "O" => 2]
+    @test UnitfulMoles.parse_compound("NaCl") == ["Na" => 1, "Cl" => 1]
+    @test UnitfulMoles.parse_compound("C8H10N4O2") == ["C" => 8, "H" => 10, "N" => 4, "O" => 2]
 end
 
 @testset "xmols are the correct fraction of their compound" begin
