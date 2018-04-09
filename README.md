@@ -1,5 +1,7 @@
 # UnitfulMoles
 
+[![Build Status](https://travis-ci.org/rafaqz/UnitfulMoles.jl.svg?branch=master)](https://travis-ci.org/rafaqz/UnitfulMoles.jl)
+
 This package provides a standardised method for defining mol units for the julia
 language, using Unitful.jl. 
 
