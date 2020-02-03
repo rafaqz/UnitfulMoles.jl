@@ -1,9 +1,13 @@
-using Unitful
-using UnitfulMoles
-using Base.Test
+using Unitful, UnitfulMoles, Test
 
+@mol Baz
 @mol Foo 55.5
 @mol Bar 99.9
+
+@testset "Printing" begin
+    @test string(3molBaz) == "3 mol(Baz)"
+    @test string(3.0mmolBaz) == "3.0 mmol(Baz)"
+end
 
 @testset "units convert to grams" begin
     @test uconvert(u"g", 2molFoo) == 111.0u"g"
