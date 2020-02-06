@@ -102,7 +102,7 @@ macro xmol(base::Symbol, compound::Symbol)
     symb = Symbol(base, "mol", compound)
     abbr = "$(base)-mol$compound"
     name = "$base-moles $(compound)"
-    equals = "$(n)mol$(compound)"
+    equals = "$(n)mol$compound"
     tf = true
 
     expr = Expr(:block)
@@ -149,9 +149,9 @@ end
 function getweight(arg::String)
     local w
     try
-        w = eval(Meta.parse("""uconvert(u"g", 1Main.mol$(arg))"""))
+        w = eval(Meta.parse("""uconvert(u"g", 1Main.mol$arg)"""))
     catch
-        w = eval(Meta.parse("""uconvert(u"g", 1u"mol$(arg)")"""))
+        w = eval(Meta.parse("""uconvert(u"g", 1u"mol$arg")"""))
     end
     return w
 end
