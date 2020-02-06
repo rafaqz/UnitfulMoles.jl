@@ -14,6 +14,7 @@ notifications:
 matrix:
   allow_failures:
   - julia: nightly
+  fast_finish: true
 
-codecove: true
-
+after_success:
+  - julia --inline=no -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
