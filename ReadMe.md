@@ -1,6 +1,7 @@
 # UnitfulMoles
 
 [![Build Status](https://travis-ci.org/rafaqz/UnitfulMoles.jl.svg?branch=master)](https://travis-ci.org/rafaqz/UnitfulMoles.jl)
+[![codecov.io](http://codecov.io/github/cesaraustralia/Dispersal.jl/coverage.svg?branch=master)](http://codecov.io/github/rafaqz/UnitfulMoles.jl?branch=master)
 
 This package provides a standardised method for defining mol units for the Julia
 language, using Unitful.jl. 
