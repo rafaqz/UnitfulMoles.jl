@@ -2,22 +2,29 @@
 
 [![Build Status](https://travis-ci.org/rafaqz/UnitfulMoles.jl.svg?branch=master)](https://travis-ci.org/rafaqz/UnitfulMoles.jl)
 
-This package provides a standardised method for defining mol units for the julia
+This package provides a standardised method for defining mol units for the Julia
 language, using Unitful.jl. 
 
 ## Moles
 
-The main command is the @mol macro:
+The main command is the `@mol` macro:
 
+```julia
+julia> @mol Foo
+mol(Foo)
 ```
+
+You can assign a molar weight to the unit
+
+```julia
 julia> @mol C 12.011                                               
 mol(C)                                                             
 ```
 
-It allows conversion between mol and g:
+which allows conversion between mol and g:
 
-```
-jpickulia> @mol N 14.0067
+```julia
+julia> @mol N 14.0067
 mol(N)                                                             
 
 julia> uconvert(u"g", 5molN)                                       
@@ -26,9 +33,10 @@ julia> uconvert(u"g", 5molN)
 
 And allows units to be expressed as mol / mol:
 
-```
+```julia
 julia> @mol O 15.999
-mol(O)                                                             
+mol(O)
+
 julia> 0.5molC/molN                                                
 0.5 mol(C) mol(N)^-1    
 ```
@@ -38,9 +46,9 @@ A set of predefined mol units is maintained separately in
 
 ## Compounds
 
-The @compound macro lets you combine basic elements into compound molecules:
+The `@compound` macro lets you combine basic elements into compound molecules:
 
-```
+```julia
 julia> @mol O 15.999
 mol(O)
 
@@ -50,7 +58,7 @@ mol(NO3)
 
 And weight conversions work for free!
 
-```
+```julia
 julia> uconvert(u"g", 10molNO3)                             
 620.037 g                                                   
 ```
@@ -58,7 +66,7 @@ julia> uconvert(u"g", 10molNO3)
 
 You can also use these macros in assignments:
 
-```
+```julia
 julia> x = (100@compound CO2) / 25u"L"
 4.0 L^-1 mol(CO2)
 
@@ -68,11 +76,11 @@ julia> uconvert(u"g/L", x)
 
 ## C-mol and others
 
-The @xmol macro creates fractional moles scaled to one mole of an element in a
+The `@xmol` macro creates fractional moles scaled to one mole of an element in a
 compound. The best example is the C-mole, which measure the amount of a compound
 relative to one mole of C:
 
-```
+```julia
 @xmol C C8H10N4O2
 
 julia> uconvert(molC8H10N4O2, 1CmolC8H10N4O2)                             
