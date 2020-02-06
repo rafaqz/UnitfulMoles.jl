@@ -11,14 +11,14 @@ The main command is the @mol macro:
 
 ```
 julia> @mol C 12.011                                               
-mol(C)                                                             
+molC                                                             
 ```
 
 It allows conversion between mol and g:
 
 ```
 jpickulia> @mol N 14.0067
-mol(N)                                                             
+molN                                                             
 
 julia> uconvert(u"g", 5molN)                                       
 70.0335 g 
@@ -28,9 +28,9 @@ And allows units to be expressed as mol / mol:
 
 ```
 julia> @mol O 15.999
-mol(O)                                                             
+molO                                                             
 julia> 0.5molC/molN                                                
-0.5 mol(C) mol(N)^-1    
+0.5 molC molN^-1    
 ```
 
 A set of predefined mol units is maintained separately in
@@ -42,10 +42,10 @@ The @compound macro lets you combine basic elements into compound molecules:
 
 ```
 julia> @mol O 15.999
-mol(O)
+molO
 
 julia> @compound NO3                                      
-mol(NO3)                                                    
+molNO3                                                    
 ```
 
 And weight conversions work for free!
@@ -60,7 +60,7 @@ You can also use these macros in assignments:
 
 ```
 julia> x = (100@compound CO2) / 25u"L"
-4.0 L^-1 mol(CO2)
+4.0 L^-1 molCO2
 
 julia> uconvert(u"g/L", x)
 176.3600000000001 g L^-1
@@ -76,10 +76,10 @@ relative to one mole of C:
 @xmol C C8H10N4O2
 
 julia> uconvert(molC8H10N4O2, 1CmolC8H10N4O2)                             
-0.125 mol(C8H10N4O2)                                                      
+0.125 molC8H10N4O2                                                      
 
 julia> uconvert(CmolC8H10N4O2, 1molC8H10N4O2)
-8.0 Cmol(C8H10N4O2)
+8.0 CmolC8H10N4O2
                                                                           
 julia> uconvert(u"g", 1CmolC8H10N4O2)                                     
 24.27425 g                                                                
