@@ -4,42 +4,38 @@
 [![codecov.io](http://codecov.io/github/cesaraustralia/Dispersal.jl/coverage.svg?branch=master)](http://codecov.io/github/rafaqz/UnitfulMoles.jl?branch=master)
 
 This package provides a standardised method for defining mol units for the Julia
-language, using Unitful.jl. 
+language, using Unitful.jl.
 
 ## Moles
 
 The main command is the `@mol` macro:
 
 ```julia
-julia> @mol Foo
-mol(Foo)
+julia> using UnitfulMoles, Unitful
+
+julia> @mol A
+molA
 ```
 
-You can assign a molar weight to the unit
+This allows for stoichiometric ratios to be expressed more naturally:
 
 ```julia
-julia> @mol C 12.011                                               
-mol(C)                                                             
+julia> @mol B
+molB
+
+julia> 0.5molA/molB
+0.5 molA molB^-1
 ```
 
-which allows conversion between mol and g:
+You can also assign a molar weight to the unit
+to allow conversion between mol and g:
 
 ```julia
 julia> @mol N 14.0067
-mol(N)                                                             
+molN
 
-julia> uconvert(u"g", 5molN)                                       
-70.0335 g 
-```
-
-And allows units to be expressed as mol / mol:
-
-```julia
-julia> @mol O 15.999
-mol(O)
-
-julia> 0.5molC/molN                                                
-0.5 mol(C) mol(N)^-1    
+julia> uconvert(u"g", 5molN)
+70.0335 g
 ```
 
 A set of predefined mol units is maintained separately in
@@ -51,28 +47,30 @@ The `@compound` macro lets you combine basic elements into compound molecules:
 
 ```julia
 julia> @mol O 15.999
-mol(O)
+molO
 
-julia> @compound NO3                                      
-mol(NO3)                                                    
+julia> @compound NO3
+molNO3
 ```
 
 And weight conversions work for free!
 
 ```julia
-julia> uconvert(u"g", 10molNO3)                             
-620.037 g                                                   
+julia> uconvert(u"g", 10molNO3)
+620.037 g
 ```
-
 
 You can also use these macros in assignments:
 
 ```julia
+julia> @mol C 12.011
+molC
+
 julia> x = (100@compound CO2) / 25u"L"
-4.0 L^-1 mol(CO2)
+4.0 L^-1 molCO2
 
 julia> uconvert(u"g/L", x)
-176.3600000000001 g L^-1
+176.036 g L^-1
 ```
 
 ## C-mol and others
@@ -82,14 +80,18 @@ compound. The best example is the C-mole, which measure the amount of a compound
 relative to one mole of C:
 
 ```julia
-@xmol C C8H10N4O2
+julia> @mol H 1.008
+molH
 
-julia> uconvert(molC8H10N4O2, 1CmolC8H10N4O2)                             
-0.125 mol(C8H10N4O2)                                                      
+julia> @xmol C C8H10N4O2
+C-molC8H10N4O2
+
+julia> uconvert(molC8H10N4O2, 1CmolC8H10N4O2)
+0.125 molC8H10N4O2
 
 julia> uconvert(CmolC8H10N4O2, 1molC8H10N4O2)
-8.0 Cmol(C8H10N4O2)
-                                                                          
-julia> uconvert(u"g", 1CmolC8H10N4O2)                                     
-24.27425 g                                                                
+8.0 C-molC8H10N4O2
+
+julia> uconvert(u"g", 1CmolC8H10N4O2)
+24.274099999999997 g
 ```

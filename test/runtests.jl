@@ -5,8 +5,8 @@ using Unitful, UnitfulMoles, Test
 @mol Bar 99.9
 
 @testset "Printing" begin
-    @test string(3molBaz) == "3 mol(Baz)"
-    @test string(3.0mmolBaz) == "3.0 mmol(Baz)"
+    @test string(3molBaz) == "3 molBaz"
+    @test string(3.0mmolBaz) == "3.0 mmolBaz"
 end
 
 @testset "units convert to grams" begin

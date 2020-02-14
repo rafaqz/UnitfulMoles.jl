@@ -13,12 +13,12 @@ Usage example:
 ```
 julia> @mol N 
 julia> 2μmolN
-2 μmol(N)
+2 μmolN
 ```
 """
 macro mol(x::Symbol)
     symb = Symbol("mol", x)
-    abbr = "mol($x)"
+    abbr = "mol$x"
     name = "Moles $(x)"
     equals = """ 1u"mol" """
     tf = true
@@ -37,12 +37,12 @@ Usage example:
 ```
 julia> @mol N 14.007
 julia> 2μmolN/u"L"
-2 L^-1 μmol(N)
+2 L^-1 μmolN
 ```
 """
 macro mol(x::Symbol, grams::Real)
     symb = Symbol("mol", x)
-    abbr = "mol($x)"
+    abbr = "mol$x"
     name = "Moles $(x)"
     equals = """ $(grams)u"g" """
     tf = true
@@ -61,11 +61,11 @@ formula. Gram conversions are generated for free from components.
 Usage example:
 ```
 julia> @mol H 1.008
-mol(H)
+molH
 julia> @mol O 15.999
-mol(O)
+molO
 julia> @compound H2O
-mol(H2O)
+molH2O
 julia>
 2molH2O |> u"g"
 36.03 g
@@ -92,7 +92,7 @@ Usage example:
 ```
 julia> @xmol C C8H10N4O2
 julia> 1CmolC8H10N4O2 |> molC8H10N4O2
-0.125 mol(C8H10N4O2)
+0.125 molC8H10N4O2
 ```
 """
 macro xmol(base::Symbol, compound::Symbol)
@@ -100,9 +100,9 @@ macro xmol(base::Symbol, compound::Symbol)
     n = 1/sum_base(base, elements)
 
     symb = Symbol(base, "mol", compound)
-    abbr = "$(base)-mol($compound)"
+    abbr = "$(base)-mol$compound"
     name = "$base-moles $(compound)"
-    equals = "$(n)mol$(compound)"
+    equals = "$(n)mol$compound"
     tf = true
 
     expr = Expr(:block)
@@ -149,9 +149,9 @@ end
 function getweight(arg::String)
     local w
     try
-        w = eval(Meta.parse("""uconvert(u"g", 1Main.mol$(arg))"""))
+        w = eval(Meta.parse("""uconvert(u"g", 1Main.mol$arg)"""))
     catch
-        w = eval(Meta.parse("""uconvert(u"g", 1u"mol$(arg)")"""))
+        w = eval(Meta.parse("""uconvert(u"g", 1u"mol$arg")"""))
     end
     return w
 end
