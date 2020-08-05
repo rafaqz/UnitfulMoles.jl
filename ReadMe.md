@@ -8,7 +8,7 @@ It essentially extends the [Unitful.jl](https://github.com/PainterQubits/Unitful
 
 ## Conventional mol units
 
-Units are available as `u"molXXX"` for most of the elements of the periodic table (just replace `XXX` with the element's symbol).
+Units are available as `u"molXX"` for most of the elements of the periodic table (just replace `XX` with the element's symbol).
 
 ```julia
 julia> using UnitfulMoles
