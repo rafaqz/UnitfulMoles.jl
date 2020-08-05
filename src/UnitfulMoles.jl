@@ -11,7 +11,7 @@ The @mol macro lets you declare specific molar units.
 
 Usage example:
 ```
-julia> @mol N 
+julia> @mol N
 julia> 2μmolN
 2 μmolN
 ```
@@ -154,6 +154,15 @@ function getweight(arg::String)
         w = eval(Meta.parse("""uconvert(u"g", 1u"mol$arg")"""))
     end
     return w
+end
+
+include("ConventionalMoles.jl")
+
+# Allow precompile, and register mol units with u_str macro.
+const localunits = Unitful.basefactors
+function __init__()
+    merge!(Unitful.basefactors, localunits)
+    Unitful.register(UnitfulMoles)
 end
 
 end # module
