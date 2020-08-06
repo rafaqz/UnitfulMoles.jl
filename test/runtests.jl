@@ -28,9 +28,10 @@ end
 
 @testset "Compound weight is the sum of its components" begin
     @compound FooBar2
-    @test uconvert(u"g", 1molFooBar2) == 255.3u"g"
-    @compound Foo4Bar
-    @test uconvert(u"g", 1molFoo4Bar) == 321.9u"g"
+    @test uconvert(u"g", 1molFooBar₂) == 255.3u"g"
+    @compound Foo₄Bar
+    @test uconvert(u"g", 1molFoo₄Bar) == 321.9u"g"
+    @compound Foo90Bar
 end
 
 @testset "Sum base" begin
@@ -41,12 +42,16 @@ end
 
 @testset "Parse compound" begin
     @test UnitfulMoles.parse_compound("CO2") == ["C" => 1, "O" => 2]
+    @test UnitfulMoles.parse_compound("CO₂") == ["C" => 1, "O" => 2]
     @test UnitfulMoles.parse_compound("NaCl") == ["Na" => 1, "Cl" => 1]
     @test UnitfulMoles.parse_compound("C8H10N4O2") == ["C" => 8, "H" => 10, "N" => 4, "O" => 2]
+    @test UnitfulMoles.parse_compound("C₈H₁₀N₄O₂") == ["C" => 8, "H" => 10, "N" => 4, "O" => 2]
 end
 
 @testset "xmols are the correct fraction of their compound" begin
-    @xmol Bar FooBar2
-    1molFooBar2 == 2BarmolFooBar2
+    @xmol Bar FooBar₂
+    1molFooBar₂ == 2BarmolFooBar₂
+    @xmol Bar Foo4Bar
+    4molFoo₄Bar == 1BarmolFoo₄Bar
 end
 
