@@ -51,10 +51,16 @@ And you can create custom compounds with the `@compound` macro:
 julia> using UnitfulMoles, Unitful
 
 julia> @compound H2O
-molH2O
+molH₂O
 
-julia> 10molH2O |> u"g" # Molecular weight is calculated automatically!
+julia> 10molH₂O |> u"g" # Molecular weight is calculated automatically!
 180.15 g
+
+julia> @compound CH₄ # subscripts work as well (and look nicer, too!)
+molCH₄
+
+julia> 1molCH₄ |> u"g"
+16.043 g
 ```
 
 ## Custom mol units
@@ -99,7 +105,7 @@ You can use these macros in assignments:
 julia> using UnitfulMoles, Unitful
 
 julia> x = (100@compound CO2) / 25u"L"
-4.0 molCO2 L⁻¹
+4.0 molCO₂ L⁻¹
 
 julia> x |> u"g/L"
 176.036 g L⁻¹
@@ -114,15 +120,15 @@ relative to one mole of C:
 ```julia
 julia> using UnitfulMoles
 
-julia> @xmol C C8H10N4O2
-C-molC8H10N4O2
+julia> @xmol C C₈H₁₀N₄O₂
+C-molC₈H₁₀N₄O₂
 
-julia> uconvert(molC8H10N4O2, 1CmolC8H10N4O2)
-0.125 molC8H10N4O2
+julia> uconvert(molC₈H₁₀N₄O₂, 1CmolC₈H₁₀N₄O₂)
+0.125 molC₈H₁₀N₄O₂
 
-julia> uconvert(CmolC8H10N4O2, 1molC8H10N4O2)
-8.0 C-molC8H10N4O2
+julia> uconvert(CmolC₈H₁₀N₄O₂, 1molC₈H₁₀N₄O₂)
+8.0 C-molC₈H₁₀N₄O₂
 
-julia> uconvert(u"g", 1CmolC8H10N4O2)
+julia> uconvert(u"g", 1CmolC₈H₁₀N₄O₂)
 24.27425 gg
 ```
