@@ -156,7 +156,7 @@ function getweight(arg::String)
     return w
 end
 
-include("ConventionalMoles.jl")
+include("conventionalmoles.jl")
 
 # Allow precompile, and register mol units with u_str macro.
 const localunits = Unitful.basefactors
