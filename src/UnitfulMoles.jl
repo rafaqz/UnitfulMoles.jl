@@ -78,6 +78,7 @@ macro compound(name::Symbol)
         weight += getweight(el) * n
     end
     weight_stripped = ustrip(weight)
+    name = subscriptify(string(name))
     str = """@mol $name $weight_stripped"""
     return esc(Meta.parse(str))
 end
@@ -99,6 +100,9 @@ macro xmol(base::Symbol, compound::Symbol)
     elements = parse_compound(string(compound))
     n = 1/sum_base(base, elements)
 
+    # Subscriptify compound
+    compound = Symbol(subscriptify(string(compound)))
+
     symb = Symbol(base, "mol", compound)
     abbr = "$(base)-mol$compound"
     name = "$base-moles $(compound)"
@@ -112,7 +116,7 @@ macro xmol(base::Symbol, compound::Symbol)
 end
 
 
-function sum_base(base, elements::Array{Pair{String,Int},1})
+function sum_base(base, elements::Array{Pair{T,Int},1}) where {T<:AbstractString}
     number = 0
     for (element, n) in elements
         if string(base) == element;
@@ -122,31 +126,41 @@ function sum_base(base, elements::Array{Pair{String,Int},1})
     return number
 end
 
-function parse_compound(str::String)
-    elements = Pair{String,Int}[]
-    numstring = ""
-    element = str[1:1]
-    for c in str[2:end]
-        if 48 <= convert(Int, c) <= 57 # Check c is a number
-            numstring *= c
-        elseif isuppercase(c) # Elements start with an uppercase letter
-            push_element!(elements, element, numstring)
-            element = string(c)
-            numstring = ""
-        elseif islowercase(c)
-            element *= c
-        end
-    end
-    push_element!(elements, element, numstring)
-    return elements
+# turn integers in compound name into subscripts
+# inspired from Unitful.superscript
+subscriptify(s::AbstractString) = map(s) do c
+    c == '0' ? '\u2080' :
+    c == '1' ? '\u2081' :
+    c == '2' ? '\u2082' :
+    c == '3' ? '\u2083' :
+    c == '4' ? '\u2084' :
+    c == '5' ? '\u2085' :
+    c == '6' ? '\u2086' :
+    c == '7' ? '\u2087' :
+    c == '8' ? '\u2088' :
+    c == '9' ? '\u2089' :
+    c
+end
+# turn subscript integers in compound name into integer characters
+desubscriptify(s::AbstractString) = map(s) do c
+    c == '\u2082' ? '2' :
+    c == '\u2083' ? '3' :
+    c == '\u2084' ? '4' :
+    c == '\u2085' ? '5' :
+    c == '\u2086' ? '6' :
+    c == '\u2087' ? '7' :
+    c == '\u2088' ? '8' :
+    c == '\u2089' ? '9' :
+    c == '\u2080' ? '0' :
+    c == '\u2081' ? '1' :
+    c
 end
 
-function push_element!(elements, element, n)
-    if n == ""; n = "1" end
-    push!(elements, element => Base.parse(Int, n))
-end
+parse_compound(s::String) = [element_num_pair(Xn) for Xn in split(desubscriptify(s), r"(?=\p{Lu}(?:\p{Ll})*(?:\d)*)")]
+element_num_pair(s::AbstractString) = strip(isdigit, s) => num_element(lstrip(isletter, s))
+num_element(s::AbstractString) = isempty(s) ? 1 : Base.parse(Int, s)
 
-function getweight(arg::String)
+function getweight(arg::AbstractString)
     local w
     try
         w = eval(Meta.parse("""uconvert(u"g", 1Main.mol$arg)"""))
