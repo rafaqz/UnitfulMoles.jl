@@ -1,6 +1,6 @@
 name = "UnitfulMoles"
 uuid = "999f2bd7-36bf-5ba7-9bc1-c9473aa75374"
-authors = ["Rafael Schouten <rafaelschouten@gmail.com>"]
+authors = ["Rafael Schouten", "Benoit Pasquier"]
 version = "0.1.0"
 
 [deps]
