@@ -77,8 +77,8 @@ macro compound(name::Symbol)
     
     sum_expr = Expr(:block, :(weight = 0.0u"g")) 
     for (el, n) in elements
-        x = Symbol("mol$el")
-        w = :(Unitful.uconvert(u"g", 1 * $x))
+        x = "mol$el"
+        w = :(Unitful.uconvert(u"g", 1 * (@u_str $x)))
         push!(sum_expr.args, :(weight += $n * $w))
     end
     name = Symbol(subscriptify(string(name)))
