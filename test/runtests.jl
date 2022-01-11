@@ -1,8 +1,10 @@
 using Unitful, UnitfulMoles, Test
 
+
 @mol Baz
 @mol Foo 55.5
-@mol Bar 99.9
+x = 99.9
+@mol Bar x
 
 @testset "Printing" begin
     @test string(3molBaz) == "3 molBaz"
