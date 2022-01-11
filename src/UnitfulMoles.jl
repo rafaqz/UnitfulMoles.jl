@@ -17,15 +17,15 @@ julia> 2μmolN
 ```
 """
 macro mol(x::Symbol)
-    symb = Symbol("mol", x)
     abbr = "mol$x"
-    name = "Moles $(x)"
-    equals = """ 1u"mol" """
+    symb = Symbol(abbr)
+    name = Symbol("Moles $x")
+    equals = :(1u"mol")
     tf = true
 
     expr = Expr(:block)
-    push!(expr.args, Meta.parse("""@unit $symb "$abbr" "$name" $equals $tf"""))
-    esc(expr)
+    push!(expr.args, :(@unit $symb $abbr $name $equals $tf))
+    return esc(expr)
 end
 
 """
@@ -40,16 +40,17 @@ julia> 2μmolN/u"L"
 2 L^-1 μmolN
 ```
 """
-macro mol(x::Symbol, grams::Real)
-    symb = Symbol("mol", x)
+macro mol(x::Symbol, grams::Union{Real,Symbol,Expr})
+    grams = grams isa Expr ? esc(grams) : grams
     abbr = "mol$x"
-    name = "Moles $(x)"
-    equals = """ $(grams)u"g" """
+    symb = Symbol(abbr)
+    name = Symbol("Moles $x")
+    equals = :($grams * u"g")
     tf = true
 
     expr = Expr(:block)
-    push!(expr.args, Meta.parse("""@unit $symb "$abbr" "$name" $equals $tf"""))
-    esc(expr)
+    push!(expr.args, :(@unit $symb $abbr $name $equals $tf))
+    return esc(expr)
 end
 
 """
@@ -73,14 +74,18 @@ julia>
 """
 macro compound(name::Symbol)
     elements = parse_compound(string(name))
-    weight = 0.0u"g"
+    
+    sum_expr = Expr(:block, :(weight = 0.0u"g")) 
     for (el, n) in elements
-        weight += getweight(el) * n
+        x = Symbol("mol$el")
+        w = :(Unitful.uconvert(u"g", 1 * $x))
+        push!(sum_expr.args, :(weight += $n * $w))
     end
-    weight_stripped = ustrip(weight)
-    name = subscriptify(string(name))
-    str = """@mol $name $weight_stripped"""
-    return esc(Meta.parse(str))
+    name = Symbol(subscriptify(string(name)))
+
+    weight_expr = :(weight = ustrip($sum_expr))
+    mol_expr = :(@mol $name weight)
+    return Expr(:block, esc(weight_expr), esc(mol_expr))
 end
 
 """
@@ -104,14 +109,14 @@ macro xmol(base::Symbol, compound::Symbol)
     compound = Symbol(subscriptify(string(compound)))
 
     symb = Symbol(base, "mol", compound)
-    abbr = "$(base)-mol$compound"
-    name = "$base-moles $(compound)"
-    equals = "$(n)mol$compound"
+    abbr = "$base-mol$compound"
+    name = Symbol("$base-moles $compound")
+    equals = :($n * $(Symbol("mol$compound")))
     tf = true
 
     expr = Expr(:block)
-    push!(expr.args, Meta.parse("""@compound $compound"""))
-    push!(expr.args, Meta.parse("""@unit $symb "$abbr" "$name" $equals $tf"""))
+    push!(expr.args, :(@compound $compound))
+    push!(expr.args, :(@unit $symb $abbr $name $equals $tf))
     esc(expr)
 end
 
@@ -160,15 +165,6 @@ parse_compound(s::String) = [element_num_pair(Xn) for Xn in split(desubscriptify
 element_num_pair(s::AbstractString) = strip(isdigit, s) => num_element(lstrip(isletter, s))
 num_element(s::AbstractString) = isempty(s) ? 1 : Base.parse(Int, s)
 
-function getweight(arg::AbstractString)
-    local w
-    try
-        w = eval(Meta.parse("""uconvert(u"g", 1Main.mol$arg)"""))
-    catch
-        w = eval(Meta.parse("""uconvert(u"g", 1u"mol$arg")"""))
-    end
-    return w
-end
 
 include("conventionalmoles.jl")
 
