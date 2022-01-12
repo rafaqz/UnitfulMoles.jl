@@ -1,7 +1,7 @@
 name = "UnitfulMoles"
 uuid = "999f2bd7-36bf-5ba7-9bc1-c9473aa75374"
 authors = ["Rafael Schouten", "Benoit Pasquier"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
