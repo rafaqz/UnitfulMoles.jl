@@ -132,3 +132,18 @@ julia> uconvert(CmolC₈H₁₀N₄O₂, 1molC₈H₁₀N₄O₂)
 julia> uconvert(u"g", 1CmolC₈H₁₀N₄O₂)
 24.27425 gg
 ```
+
+## Use in a package
+
+To use UnitfulMoles.jl in a package you will need to register your package with Unitful.jl,
+by adding this code in the main package module.
+
+```julia
+const localunits = Unitful.basefactors
+function __init__()
+    merge!(Unitful.basefactors, localunits)
+    Unitful.register(UnitfulMoles)
+end
+```
+
+Without this you will likely have errors with using e.g. a `@compound` you define in the package.
