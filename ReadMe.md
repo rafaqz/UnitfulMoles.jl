@@ -139,11 +139,10 @@ To use UnitfulMoles.jl in a package you will need to register your package with 
 by adding this code in the main package module.
 
 ```julia
-const localunits = Unitful.basefactors
-function __init__()
-    merge!(Unitful.basefactors, localunits)
-    Unitful.register(UnitfulMoles)
+function __init__()\
+    Unitful.register(YourPackageName)
 end
 ```
 
 Without this you will likely have errors with using e.g. a `@compound` you define in the package.
+See the [Unitful docs](https://painterqubits.github.io/Unitful.jl/stable/extending/#Extending-Unitful) for details.
